@@ -3,11 +3,10 @@ name = "pysentinel"
 version = "0.1.0"
 description = "A python pakcage for threshold based alerting using simple configuration."
 authors = [
-    {name = "Rakibul Haq",email = "haq.rakibul@gmail.com"}
+    "Rakibul Haq <haq.rakibul@gmail.com>",
 ]
 license = "MIT"
 readme = "README.md"
-requires-python = ">=3.9,<4.0"
 
 [tool.poetry.dependencies]
 python = "^3.9"
