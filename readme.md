@@ -2,6 +2,10 @@
 
 pysentinel is a Python package for threshold-based alerting using simple configuration. It scans data sources and raises alerts when specified thresholds are crossed.
 
+[![PyPI version](https://img.shields.io/pypi/v/pysentinel.svg)](https://pypi.org/project/pysentinel/)
+[![Python versions](https://img.shields.io/pypi/pyversions/pysentinel.svg)](https://pypi.org/project/pysentinel/)
+[![Codecov](https://codecov.io/gh/rakibulhaq/pysentinel/branch/main/graph/badge.svg)](https://codecov.io/gh/rakibulhaq/pysentinel)
+[![Snyk](https://snyk.io/test/github/rakibulhaq/pysentinel/badge.svg)](https://snyk.io/test/github/rakibulhaq/pysentinel)
 ## Features
 
 - Scan data sources for threshold violations
