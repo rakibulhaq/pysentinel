@@ -24,7 +24,7 @@ poetry add pysentinel
 pip install pysentinel
 ```
 
-## Usage
+## Usage Examples
 
 ```python
 from pysentinel.core.scanner import Scanner
@@ -81,6 +81,545 @@ scanner.start_background()
 ```
 This example shows how to configure and start the scanner, with alert intervals and persistent runtime tracking.
 
+
+**Blocking usage with `start()`:**
+
+```python
+from pysentinel.core.scanner import Scanner
+
+config = { ... }  # your configuration dictionary
+
+scanner = Scanner(config)
+scanner.start()  # This will block and run the scanner loop
+```
+
+**Async usage with `start_async()`:**
+
+```python
+import asyncio
+from pysentinel.core.scanner import Scanner
+
+config = { ... }  # your configuration dictionary
+
+async def main():
+    scanner = Scanner(config)
+    await scanner.start_async()
+    # Optionally, do other async tasks here
+
+asyncio.run(main())
+```
+
+Replace `{ ... }` with your actual configuration.  
+`start()` runs the scanner in the main thread and blocks, while `start_async()` allows integration with other async code.
+
+## FastAPI Integration Example
+
+```python
+from fastapi import FastAPI
+from pysentinel.core.scanner import Scanner
+
+app = FastAPI()
+
+config = {
+    # ... your pysentinel configuration ...
+}
+
+scanner = Scanner(config)
+
+@app.on_event("startup")
+async def start_scanner():
+    # Start the scanner in the background when FastAPI starts
+    import asyncio
+    await asyncio.create_task(scanner.start_async())
+
+@app.get("/")
+async def root():
+    return {"message": "pysentinel FastAPI integration running"}
+```
+**This example shows how to integrate pysentinel with FastAPI, starting the scanner in the background when the application starts.**
+
+## Configuration
+Here’s how to use the `load_config()` function from `pysentinel.config.loader` to load your YAML config and start the scanner.  
+This approach works for both YAML and JSON config files.
+
+```python
+import pysentinel.config.loader as loader
+from pysentinel.core.scanner import Scanner
+
+config = loader.load_config("config.yml")
+scanner = Scanner(config)
+scanner.start_background()
+```
+
+This will load your configuration from `config.yml` and start the scanner in the background.
+## Example Configuration File in yml format
+```yml
+# PySentinel Configuration
+# Configuration for monitoring with alert groups
+
+# Global settings
+global:
+  log_level: "INFO"
+  max_concurrent_scans: 10
+  alert_cooldown_minutes: 5  # Minimum time between similar alerts
+  metrics_retention_hours: 24
+
+# Data source definitions
+datasources:
+  primary_db:
+    type: "postgresql"
+    connection_string: "postgresql://user:password@localhost:5432/production"
+    timeout: 30
+    max_retries: 3
+    enabled: true
+
+  api_gateway:
+    type: "http"
+    base_url: "https://api.company.com"
+    headers:
+      Authorization: "Bearer ${API_TOKEN}"
+      Content-Type: "application/json"
+    timeout: 15
+    enabled: true
+
+  redis_cache:
+    type: "redis"
+    host: "localhost"
+    port: 6379
+    db: 0
+    password: "${REDIS_PASSWORD}"
+    enabled: true
+
+  system_metrics:
+    type: "prometheus"
+    url: "http://prometheus:9090"
+    timeout: 10
+    enabled: true
+
+  log_aggregator:
+    type: "elasticsearch"
+    hosts: ["elasticsearch:9200"]
+    index_pattern: "app-logs-*"
+    enabled: true
+
+# Alert channel configurations
+alert_channels:
+  critical_email:
+    type: "email"
+    smtp_server: "smtp.company.com"
+    smtp_port: 587
+    username: "alerts@company.com"
+    password: "${EMAIL_PASSWORD}"
+    from_address: "alerts@company.com"
+    recipients:
+      - "oncall@company.com"
+      - "devops-lead@company.com"
+    subject_template: "[CRITICAL] PySentinel Alert: {alert_title}"
+
+  team_slack:
+    type: "slack"
+    webhook_url: "https://hooks.slack.com/services/T00000000/B00000000/XXXXXXXXXXXXXXXXXXXXXXXX"
+    channel: "#alerts"
+    username: "PySentinel"
+    icon_emoji: ":warning:"
+    mention_users: ["@oncall", "@devops"]
+
+  webhook_monitoring:
+    type: "webhook"
+    url: "https://monitoring.company.com/api/alerts"
+    method: "POST"
+    headers:
+      Authorization: "Bearer ${WEBHOOK_TOKEN}"
+      Content-Type: "application/json"
+    retry_count: 3
+
+# Alert groups configuration
+alert_groups:
+  # Database Performance Group
+  database_performance:
+    title: "Database Performance Monitoring"
+    description: "Critical database metrics and performance indicators"
+    enabled: true
+
+    alerts:
+      - name: "high_cpu_usage"
+        metrics: "cpu_utilization"
+        query: "SELECT AVG(cpu_percent) as cpu_utilization FROM pg_stat_activity WHERE state = 'active'"
+        datasource: "primary_db"
+        threshold:
+          min: null
+          max: 85.0
+          type: "percentage"  # absolute or percentage
+        severity: "warning"
+        interval: 60  # seconds
+        alert_channels: ["team_slack", "webhook_monitoring"]
+        description: "Database CPU usage is too high"
+
+      - name: "connection_pool_exhaustion"
+        metrics: "active_connections"
+        query: "SELECT COUNT(*) as active_connections FROM pg_stat_activity WHERE state != 'idle'"
+        datasource: "primary_db"
+        threshold:
+          min: null
+          max: 95
+          type: "absolute"
+        severity: "critical"
+        interval: 30
+        alert_channels: ["critical_email", "pagerduty_critical", "sms_critical"]
+        description: "Database connection pool near exhaustion"
+
+      - name: "slow_queries"
+        metrics: "avg_query_time"
+        query: "SELECT AVG(EXTRACT(EPOCH FROM (now() - query_start))) as avg_query_time FROM pg_stat_activity WHERE state = 'active' AND query_start IS NOT NULL"
+        datasource: "primary_db"
+        threshold:
+          min: null
+          max: 5.0
+          type: "absolute"  # seconds
+        severity: "warning"
+        interval: 120
+        alert_channels: ["team_slack"]
+        description: "Average query execution time is too high"
+
+      - name: "deadlock_detection"
+        metrics: "deadlock_count"
+        query: "SELECT COUNT(*) as deadlock_count FROM pg_stat_database WHERE datname = 'production' AND deadlocks > 0"
+        datasource: "primary_db"
+        threshold:
+          min: 1
+          max: null
+          type: "absolute"
+        severity: "critical"
+        interval: 300
+        alert_channels: ["critical_email", "team_slack"]
+        description: "Database deadlocks detected"
+
+  # Application Performance Group
+  application_performance:
+    title: "Application Performance & Health"
+    description: "API response times, error rates, and application health"
+    enabled: true
+
+    alerts:
+      - name: "api_response_time"
+        metrics: "avg_response_time"
+        query: "/api/v1/metrics/response-time"
+        datasource: "api_gateway"
+        threshold:
+          min: null
+          max: 2000  # milliseconds
+          type: "absolute"
+        severity: "warning"
+        interval: 30
+        alert_channels: ["team_slack"]
+        description: "API average response time is high"
+
+      - name: "error_rate_spike"
+        metrics: "error_rate"
+        query: "/api/v1/metrics/error-rate"
+        datasource: "api_gateway"
+        threshold:
+          min: null
+          max: 5.0
+          type: "percentage"
+        severity: "critical"
+        interval: 60
+        alert_channels: ["critical_email", "pagerduty_critical", "team_slack"]
+        description: "API error rate exceeded acceptable threshold"
+
+      - name: "service_availability"
+        metrics: "uptime_percentage"
+        query: "/api/v1/health/uptime"
+        datasource: "api_gateway"
+        threshold:
+          min: 99.5
+          max: null
+          type: "percentage"
+        severity: "critical"
+        interval: 300
+        alert_channels: ["critical_email", "pagerduty_critical"]
+        description: "Service availability below SLA"
+
+  # Infrastructure Monitoring Group
+  infrastructure_monitoring:
+    title: "Infrastructure & System Resources"
+    description: "Server resources, memory, disk space, and system health"
+    enabled: true
+
+    alerts:
+      - name: "memory_usage"
+        metrics: "memory_utilization"
+        query: 'avg(node_memory_MemAvailable_bytes / node_memory_MemTotal_bytes * 100)'
+        datasource: "system_metrics"
+        threshold:
+          min: null
+          max: 90.0
+          type: "percentage"
+        severity: "warning"
+        interval: 120
+        alert_channels: ["team_slack", "webhook_monitoring"]
+        description: "System memory usage is high"
+
+      - name: "disk_space"
+        metrics: "disk_usage"
+        query: 'avg(100 - (node_filesystem_avail_bytes / node_filesystem_size_bytes * 100))'
+        datasource: "system_metrics"
+        threshold:
+          min: null
+          max: 85.0
+          type: "percentage"
+        severity: "critical"
+        interval: 300
+        alert_channels: ["critical_email", "team_slack"]
+        description: "Disk space usage critical"
+
+      - name: "load_average"
+        metrics: "load_1m"
+        query: 'avg(node_load1)'
+        datasource: "system_metrics"
+        threshold:
+          min: null
+          max: 4.0
+          type: "absolute"
+        severity: "warning"
+        interval: 180
+        alert_channels: ["team_slack"]
+        description: "System load average is high"
+
+  # Cache Performance Group
+  cache_performance:
+    title: "Cache Performance & Redis Health"
+    description: "Redis cache hit rates, memory usage, and connection health"
+    enabled: true
+
+    alerts:
+      - name: "cache_hit_rate"
+        metrics: "hit_rate"
+        query: "INFO stats"  # Will be parsed to extract hit rate
+        datasource: "redis_cache"
+        threshold:
+          min: 85.0
+          max: null
+          type: "percentage"
+        severity: "warning"
+        interval: 240
+        alert_channels: ["team_slack"]
+        description: "Cache hit rate below optimal threshold"
+
+      - name: "redis_memory_usage"
+        metrics: "memory_usage"
+        query: "INFO memory"
+        datasource: "redis_cache"
+        threshold:
+          min: null
+          max: 90.0
+          type: "percentage"
+        severity: "critical"
+        interval: 180
+        alert_channels: ["critical_email", "team_slack"]
+        description: "Redis memory usage critical"
+
+      - name: "redis_connection_count"
+        metrics: "connected_clients"
+        query: "INFO clients"
+        datasource: "redis_cache"
+        threshold:
+          min: null
+          max: 1000
+          type: "absolute"
+        severity: "warning"
+        interval: 120
+        alert_channels: ["team_slack"]
+        description: "High number of Redis connections"
+
+  # Security & Error Monitoring Group
+  security_monitoring:
+    title: "Security Events & Error Monitoring"
+    description: "Failed logins, suspicious activities, and critical errors"
+    enabled: true
+
+    alerts:
+      - name: "failed_login_attempts"
+        metrics: "failed_logins"
+        query: '{
+          "query": {
+            "bool": {
+              "must": [
+                {"match": {"event_type": "failed_login"}},
+                {"range": {"@timestamp": {"gte": "now-5m"}}}
+              ]
+            }
+          },
+          "aggs": {
+            "failed_count": {"value_count": {"field": "user_id"}}
+          }
+        }'
+        datasource: "log_aggregator"
+        threshold:
+          min: 50
+          max: null
+          type: "absolute"
+        severity: "warning"
+        interval: 300
+        alert_channels: ["team_slack", "webhook_monitoring"]
+        description: "High number of failed login attempts detected"
+
+      - name: "critical_errors"
+        metrics: "error_count"
+        query: '{
+          "query": {
+            "bool": {
+              "must": [
+                {"match": {"log_level": "ERROR"}},
+                {"range": {"@timestamp": {"gte": "now-1m"}}}
+              ]
+            }
+          },
+          "aggs": {
+            "error_count": {"value_count": {"field": "message"}}
+          }
+        }'
+        datasource: "log_aggregator"
+        threshold:
+          min: 10
+          max: null
+          type: "absolute"
+        severity: "critical"
+        interval: 60
+        alert_channels: ["critical_email", "team_slack"]
+        description: "High rate of critical errors in application logs"
+
+      - name: "suspicious_ip_activity"
+        metrics: "unique_ips"
+        query: '{
+          "query": {
+            "bool": {
+              "must": [
+                {"match": {"status_code": "401"}},
+                {"range": {"@timestamp": {"gte": "now-10m"}}}
+              ]
+            }
+          },
+          "aggs": {
+            "unique_ips": {"cardinality": {"field": "client_ip"}}
+          }
+        }'
+        datasource: "log_aggregator"
+        threshold:
+          min: 20
+          max: null
+          type: "absolute"
+        severity: "warning"
+        interval: 600
+        alert_channels: ["team_slack", "webhook_monitoring"]
+        description: "Suspicious activity: Multiple IPs with unauthorized access attempts"
+
+  # Business Metrics Group
+  business_metrics:
+    title: "Business KPIs & Revenue Metrics"
+    description: "Order volumes, revenue trends, and critical business indicators"
+    enabled: true
+
+    alerts:
+      - name: "low_order_volume"
+        metrics: "hourly_orders"
+        query: "SELECT COUNT(*) as hourly_orders FROM orders WHERE created_at >= NOW() - INTERVAL '1 hour'"
+        datasource: "primary_db"
+        threshold:
+          min: 50
+          max: null
+          type: "absolute"
+        severity: "warning"
+        interval: 300
+        alert_channels: ["team_slack"]
+        description: "Order volume below expected threshold"
+
+      - name: "revenue_drop"
+        metrics: "hourly_revenue"
+        query: "SELECT COALESCE(SUM(total_amount), 0) as hourly_revenue FROM orders WHERE created_at >= NOW() - INTERVAL '1 hour' AND status = 'completed'"
+        datasource: "primary_db"
+        threshold:
+          min: 10000.0
+          max: null
+          type: "absolute"
+        severity: "critical"
+        interval: 600
+        alert_channels: ["critical_email", "team_slack"]
+        description: "Hourly revenue significantly below target"
+
+      - name: "payment_failure_rate"
+        metrics: "payment_failure_rate"
+        query: "SELECT (COUNT(CASE WHEN status = 'failed' THEN 1 END) * 100.0 / COUNT(*)) as payment_failure_rate FROM payments WHERE created_at >= NOW() - INTERVAL '1 hour'"
+        datasource: "primary_db"
+        threshold:
+          min: null
+          max: 5.0
+          type: "percentage"
+        severity: "critical"
+        interval: 300
+        alert_channels: ["critical_email", "team_slack"]
+        description: "Payment failure rate exceeds acceptable threshold"
+
+# Alert routing rules
+alert_routing:
+  # Route critical alerts during business hours differently
+  business_hours:
+    enabled: true
+    timezone: "America/New_York"
+    weekdays: [1, 2, 3, 4, 5]  # Monday to Friday
+    start_time: "09:00"
+    end_time: "17:00"
+
+    rules:
+      - severity: "critical"
+        additional_channels: ["sms_critical"]
+      - severity: "warning"
+        channels: ["team_slack"]  # Override default channels
+
+  # After hours routing
+  after_hours:
+    enabled: true
+    rules:
+      - severity: "critical"
+        channels: ["pagerduty_critical", "sms_critical", "critical_email"]
+      - severity: "warning"
+        channels: ["team_slack"]
+        delay_minutes: 15  # Delay non-critical alerts
+
+# Alert suppression rules
+suppression_rules:
+  # Suppress similar alerts within timeframe
+  - name: "duplicate_suppression"
+    enabled: true
+    window_minutes: 10
+    max_alerts: 1
+    group_by: ["alert_name", "datasource", "severity"]
+
+  # Maintenance window suppression
+  - name: "maintenance_window"
+    enabled: false  # Enable when maintenance is scheduled
+    start_time: "2024-12-01T02:00:00Z"
+    end_time: "2024-12-01T06:00:00Z"
+    suppress_severities: ["warning"]
+    affected_groups: ["infrastructure_monitoring", "database_performance"]
+
+# Escalation rules
+escalation_rules:
+  - name: "unacknowledged_critical"
+    enabled: true
+    trigger_after_minutes: 15
+    severity_filter: ["critical"]
+    escalation_channels: ["sms_critical", "pagerduty_critical"]
+    message_template: "ESCALATED: Unacknowledged critical alert - {alert_name}"
+
+  - name: "repeated_warnings"
+    enabled: true
+    trigger_after_count: 5
+    window_minutes: 60
+    severity_filter: ["warning"]
+    escalate_to_severity: "critical"
+    escalation_channels: ["critical_email"]
+```
 ## Requirements
 
 - Python >= 3.9, < 4.0
