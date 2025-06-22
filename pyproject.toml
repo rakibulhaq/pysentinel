@@ -10,12 +10,17 @@ readme = "README.md"
 
 [tool.poetry.dependencies]
 python = "^3.9"
+aiohttp = "^3.12.13"
+aioredis = "^2.0.1"
+elasticsearch = "^9.0.2"
+pyyaml = "^6.0.2"
 
 [tool.poetry.group.dev.dependencies]
 black = "*"
 pytest = "^8.3.5"
 pytest-mock = "^3.14.1"
 pytest-cov = "^6.1.1"
+pytest-asyncio = "^1.0.0"
 
 
 [build-system]
