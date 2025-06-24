@@ -1,15 +1,11 @@
 # PySentinel
-<hr>
+[![pysentinel logo](assets/pysentinel.png)
 
 [![PyPI version](https://img.shields.io/pypi/v/pysentinel.svg)](https://pypi.org/project/pysentinel/)
 [![Python versions](https://img.shields.io/pypi/pyversions/pysentinel.svg)](https://pypi.org/project/pysentinel/)
 [![Codecov](https://codecov.io/gh/rakibulhaq/pysentinel/branch/main/graph/badge.svg)](https://codecov.io/gh/rakibulhaq/pysentinel)
 [![Snyk](https://snyk.io/test/github/rakibulhaq/pysentinel/badge.svg)](https://snyk.io/test/github/rakibulhaq/pysentinel)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
-
-<p align="center">
-  <img src="assets/pysentinel.png" alt="pysentinel logo" width="auto"/>
-</p>
 
 
 
