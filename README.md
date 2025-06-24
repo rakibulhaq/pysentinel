@@ -1,5 +1,5 @@
 # PySentinel
-[![pysentinel logo](assets/pysentinel.png)
+[![pysentinel logo](assets/pysentinel.png)]()
 
 [![PyPI version](https://img.shields.io/pypi/v/pysentinel.svg)](https://pypi.org/project/pysentinel/)
 [![Python versions](https://img.shields.io/pypi/pyversions/pysentinel.svg)](https://pypi.org/project/pysentinel/)
