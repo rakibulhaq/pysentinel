@@ -29,31 +29,32 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent">{
-  &quot;keyToString&quot;: {
-    &quot;Python tests.Python tests for test_scanner.test_get_datasource.executor&quot;: &quot;Run&quot;,
-    &quot;Python tests.Python tests for test_scanner.test_get_datasources.executor&quot;: &quot;Run&quot;,
-    &quot;Python tests.Python tests for test_scanner.test_handle_violation_sends_alert.executor&quot;: &quot;Run&quot;,
-    &quot;Python tests.Python tests for test_scanner.test_scan_once_async_disables_datasource_after_max_errors.executor&quot;: &quot;Run&quot;,
-    &quot;Python tests.Python tests for test_scanner.test_scan_once_async_handles_no_alerts.executor&quot;: &quot;Run&quot;,
-    &quot;Python tests.Python tests for test_scanner.test_scan_once_async_handles_query_errors.executor&quot;: &quot;Run&quot;,
-    &quot;Python tests.Python tests for test_scanner.test_scan_once_async_skips_disabled_datasources.executor&quot;: &quot;Run&quot;,
-    &quot;Python tests.Python tests for test_scanner.test_scanner_init_and_setup.executor&quot;: &quot;Run&quot;,
-    &quot;Python tests.Python tests for test_scanner.test_scanner_with_fixture_config.executor&quot;: &quot;Run&quot;,
-    &quot;Python tests.Python tests for test_scanner.test_should_send_alert_resets_cooldown.executor&quot;: &quot;Run&quot;,
-    &quot;Python tests.Python tests for threshold.TestThreshold.executor&quot;: &quot;Run&quot;,
-    &quot;Python tests.Python tests for threshold.TestThreshold.test_alert_definition_check_threshold_invalid.executor&quot;: &quot;Run&quot;,
-    &quot;Python tests.Python tests for threshold.TestThreshold.test_alert_definition_check_threshold_max.executor&quot;: &quot;Run&quot;,
-    &quot;Python tests.Python tests for threshold.TestThreshold.test_alert_definition_check_threshold_min.executor&quot;: &quot;Run&quot;,
-    &quot;Python tests.Python tests for threshold.TestThreshold.test_alert_definition_create_violation.executor&quot;: &quot;Run&quot;,
-    &quot;Python tests.Python tests for threshold.TestThreshold.test_metric_data_to_dict.executor&quot;: &quot;Run&quot;,
-    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
-    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
-    &quot;last_opened_file_path&quot;: &quot;/Users/rakibulhaq/Projects/packages/python/pysentinel&quot;
+  <component name="PropertiesComponent"><![CDATA[{
+  "keyToString": {
+    "Python tests.Python tests for test_scanner.test_get_datasource.executor": "Run",
+    "Python tests.Python tests for test_scanner.test_get_datasources.executor": "Run",
+    "Python tests.Python tests for test_scanner.test_handle_violation_sends_alert.executor": "Run",
+    "Python tests.Python tests for test_scanner.test_scan_once_async_disables_datasource_after_max_errors.executor": "Run",
+    "Python tests.Python tests for test_scanner.test_scan_once_async_handles_no_alerts.executor": "Run",
+    "Python tests.Python tests for test_scanner.test_scan_once_async_handles_query_errors.executor": "Run",
+    "Python tests.Python tests for test_scanner.test_scan_once_async_skips_disabled_datasources.executor": "Run",
+    "Python tests.Python tests for test_scanner.test_scanner_init_and_setup.executor": "Run",
+    "Python tests.Python tests for test_scanner.test_scanner_with_fixture_config.executor": "Run",
+    "Python tests.Python tests for test_scanner.test_should_send_alert_resets_cooldown.executor": "Run",
+    "Python tests.Python tests for threshold.TestThreshold.executor": "Run",
+    "Python tests.Python tests for threshold.TestThreshold.test_alert_definition_check_threshold_invalid.executor": "Run",
+    "Python tests.Python tests for threshold.TestThreshold.test_alert_definition_check_threshold_max.executor": "Run",
+    "Python tests.Python tests for threshold.TestThreshold.test_alert_definition_check_threshold_min.executor": "Run",
+    "Python tests.Python tests for threshold.TestThreshold.test_alert_definition_create_violation.executor": "Run",
+    "Python tests.Python tests for threshold.TestThreshold.test_metric_data_to_dict.executor": "Run",
+    "RunOnceActivity.ShowReadmeOnStart": "true",
+    "git-widget-placeholder": "main",
+    "last_opened_file_path": "/Users/rakibulhaq/Projects/packages/python/pysentinel/assets"
   }
-}</component>
+}]]></component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
+      <recent name="$PROJECT_DIR$/assets" />
       <recent name="$PROJECT_DIR$" />
     </key>
     <key name="MoveFile.RECENT_KEYS">
