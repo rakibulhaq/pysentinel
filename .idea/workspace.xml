@@ -4,44 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3a9ac4df-1a52-4453-993c-0b016751ef66" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/pysentinel/channels/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pysentinel/channels/base.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pysentinel/channels/channel_factory.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pysentinel/channels/email.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pysentinel/channels/slack.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pysentinel/channels/telegram.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/pysentinel/channels/webhook.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/pysentinel/channels/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/pysentinel/cli/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/pysentinel/config/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/pysentinel/config/test_loader.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/pysentinel/core/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/pysentinel/core/test_scanner.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/pysentinel/core/test_threshold.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/pysentinel/datasources/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/pysentinel/fixtures/__init__.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/pysentinel/fixtures/config.yml" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/pysentinel/utils/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/misc.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/misc.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysentinel/config/loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysentinel/config/loader.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysentinel/config/validator.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysentinel/config/validator.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysentinel/core/scanner.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysentinel/core/scanner.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysentinel/core/threshold.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysentinel/core/threshold.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysentinel/datasources/api.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysentinel/datasources/api.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysentinel/datasources/base.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysentinel/datasources/base.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysentinel/datasources/database.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysentinel/datasources/database.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysentinel/notifiers/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysentinel/datasources/elasticsearch.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysentinel/notifiers/email.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysentinel/datasources/prometheus.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysentinel/notifiers/notifier_factory.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysentinel/datasources/redis.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysentinel/notifiers/slack.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysentinel/utils/alert_db.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysentinel/notifiers/telegram.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysentinel/utils/constants.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysentinel/notifiers/webhook.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/pysentinel/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysentinel/utils/exception.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysentinel/utils/exception.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/readme.md" beforeDir="false" afterPath="$PROJECT_DIR$/readme.md" afterDir="false" />
-    </list>
+    <list default="true" id="3a9ac4df-1a52-4453-993c-0b016751ef66" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -66,29 +29,29 @@
     <option name="hideEmptyMiddlePackages" value="true" />
     <option name="showLibraryContents" value="true" />
   </component>
-  <component name="PropertiesComponent"><![CDATA[{
-  "keyToString": {
-    "Python tests.Python tests for test_scanner.test_get_datasource.executor": "Run",
-    "Python tests.Python tests for test_scanner.test_get_datasources.executor": "Run",
-    "Python tests.Python tests for test_scanner.test_handle_violation_sends_alert.executor": "Run",
-    "Python tests.Python tests for test_scanner.test_scan_once_async_disables_datasource_after_max_errors.executor": "Run",
-    "Python tests.Python tests for test_scanner.test_scan_once_async_handles_no_alerts.executor": "Run",
-    "Python tests.Python tests for test_scanner.test_scan_once_async_handles_query_errors.executor": "Run",
-    "Python tests.Python tests for test_scanner.test_scan_once_async_skips_disabled_datasources.executor": "Run",
-    "Python tests.Python tests for test_scanner.test_scanner_init_and_setup.executor": "Run",
-    "Python tests.Python tests for test_scanner.test_scanner_with_fixture_config.executor": "Run",
-    "Python tests.Python tests for test_scanner.test_should_send_alert_resets_cooldown.executor": "Run",
-    "Python tests.Python tests for threshold.TestThreshold.executor": "Run",
-    "Python tests.Python tests for threshold.TestThreshold.test_alert_definition_check_threshold_invalid.executor": "Run",
-    "Python tests.Python tests for threshold.TestThreshold.test_alert_definition_check_threshold_max.executor": "Run",
-    "Python tests.Python tests for threshold.TestThreshold.test_alert_definition_check_threshold_min.executor": "Run",
-    "Python tests.Python tests for threshold.TestThreshold.test_alert_definition_create_violation.executor": "Run",
-    "Python tests.Python tests for threshold.TestThreshold.test_metric_data_to_dict.executor": "Run",
-    "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
-    "last_opened_file_path": "/Users/rakibulhaq/Projects/packages/python/pysentinel"
+  <component name="PropertiesComponent">{
+  &quot;keyToString&quot;: {
+    &quot;Python tests.Python tests for test_scanner.test_get_datasource.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test_scanner.test_get_datasources.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test_scanner.test_handle_violation_sends_alert.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test_scanner.test_scan_once_async_disables_datasource_after_max_errors.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test_scanner.test_scan_once_async_handles_no_alerts.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test_scanner.test_scan_once_async_handles_query_errors.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test_scanner.test_scan_once_async_skips_disabled_datasources.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test_scanner.test_scanner_init_and_setup.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test_scanner.test_scanner_with_fixture_config.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for test_scanner.test_should_send_alert_resets_cooldown.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for threshold.TestThreshold.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for threshold.TestThreshold.test_alert_definition_check_threshold_invalid.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for threshold.TestThreshold.test_alert_definition_check_threshold_max.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for threshold.TestThreshold.test_alert_definition_check_threshold_min.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for threshold.TestThreshold.test_alert_definition_create_violation.executor&quot;: &quot;Run&quot;,
+    &quot;Python tests.Python tests for threshold.TestThreshold.test_metric_data_to_dict.executor&quot;: &quot;Run&quot;,
+    &quot;RunOnceActivity.ShowReadmeOnStart&quot;: &quot;true&quot;,
+    &quot;git-widget-placeholder&quot;: &quot;main&quot;,
+    &quot;last_opened_file_path&quot;: &quot;/Users/rakibulhaq/Projects/packages/python/pysentinel&quot;
   }
-}]]></component>
+}</component>
   <component name="RecentsManager">
     <key name="CopyFile.RECENT_KEYS">
       <recent name="$PROJECT_DIR$" />
