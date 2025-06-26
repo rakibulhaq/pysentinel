@@ -6,6 +6,7 @@
 [![Codecov](https://codecov.io/gh/rakibulhaq/pysentinel/branch/main/graph/badge.svg)](https://codecov.io/gh/rakibulhaq/pysentinel)
 [![Snyk](https://snyk.io/test/github/rakibulhaq/pysentinel/badge.svg)](https://snyk.io/test/github/rakibulhaq/pysentinel)
 [![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
+[![PyPI - Downloads](https://img.shields.io/pypi/dm/pysentinel.svg?label=PyPI%20downloads)](https://pypistats.org/packages/pysentinel)
 
 
 
