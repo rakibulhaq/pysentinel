@@ -13,9 +13,11 @@ class Email(AlertChannel):
     async def send_alert(self, violation: Violation) -> bool:
         try:
             msg = MIMEMultipart()
-            msg['From'] = self.config['from_address']
-            msg['To'] = ', '.join(self.config['recipients'])
-            msg['Subject'] = self.config['subject_template'].format(alert_title=violation.alert_name)
+            msg["From"] = self.config["from_address"]
+            msg["To"] = ", ".join(self.config["recipients"])
+            msg["Subject"] = self.config["subject_template"].format(
+                alert_title=violation.alert_name
+            )
 
             body = f"""
             Alert: {violation.alert_name}
@@ -27,18 +29,20 @@ class Email(AlertChannel):
             Time: {violation.timestamp}
             """
 
-            msg.attach(MIMEText(body, 'plain'))
+            msg.attach(MIMEText(body, "plain"))
 
-            password = self.config['password']
-            if password.startswith('${') and password.endswith('}'):
+            password = self.config["password"]
+            if password.startswith("${") and password.endswith("}"):
                 env_var = password[2:-1]
                 password = os.getenv(env_var, password)
 
-            server = smtplib.SMTP(self.config['smtp_server'], self.config['smtp_port'])
+            server = smtplib.SMTP(self.config["smtp_server"], self.config["smtp_port"])
             server.starttls()
-            server.login(self.config['username'], password)
+            server.login(self.config["username"], password)
             text = msg.as_string()
-            server.sendmail(self.config['from_address'], self.config['recipients'], text)
+            server.sendmail(
+                self.config["from_address"], self.config["recipients"], text
+            )
             server.quit()
 
             return True

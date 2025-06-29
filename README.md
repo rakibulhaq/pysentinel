@@ -149,6 +149,220 @@ async def root():
 ```
 **This example shows how to integrate pysentinel with FastAPI, starting the scanner in the background when the application starts.**
 
+## CLI Installation & Usage
+
+### Install from PyPI (Recommended)
+
+```bash
+
+
+```bash
+# Install PySentinel with CLI support
+pip install pysentinel
+
+# Or using Poetry
+poetry add pysentinel
+```
+
+After installation, the `pysentinel` command will be available in your terminal.
+
+## CLI Usage
+
+PySentinel provides a command-line interface for running the scanner with configuration files.
+
+### Basic Usage
+
+```bash
+# Run scanner synchronously (blocking)
+pysentinel config.yml
+
+# Run scanner asynchronously (non-blocking)
+pysentinel config.yml --async
+
+# Use JSON configuration
+pysentinel /path/to/config.json
+
+# Show help
+pysentinel --help
+
+# Show version
+pysentinel --version
+```
+
+### Configuration File
+
+Create a YAML or JSON configuration file:
+
+**Example `config.yml`:**
+```yaml
+scanner:
+  interval: 30
+  timeout: 10
+
+alerts:
+  email:
+    enabled: true
+    smtp_server: "smtp.example.com"
+    recipients:
+      - "admin@example.com"
+  
+thresholds:
+  cpu_usage: 80
+  memory_usage: 85
+```
+
+### CLI Examples
+
+```bash
+# Start monitoring with 30-second intervals
+pysentinel production-config.yml
+
+# Run in background mode (async)
+pysentinel monitoring.yml --async
+
+# Use absolute path to config
+pysentinel /etc/pysentinel/config.yml
+
+# Quick help
+pysentinel -h
+```
+
+### Exit Codes
+
+- `0` - Success or user interrupted (Ctrl+C)
+- `1` - Configuration or scanner error
+
+## Docker Usage
+
+### Running PySentinel CLI in Docker
+
+You can run PySentinel inside a Docker container for isolated execution and easy deployment.
+
+**Create a Dockerfile:**
+
+```dockerfile
+FROM python:3.11-slim
+
+# Install PySentinel
+RUN pip install pysentinel
+
+# Create app directory
+WORKDIR /app
+
+# Copy configuration file
+COPY config.yml /app/config.yml
+
+# Run PySentinel CLI
+CMD ["pysentinel", "config.yml"]
+```
+### Build and Run the Docker Container
+
+```bash
+# Build the Docker image
+docker build -t pysentinel-app .
+
+# Run synchronously
+docker run --rm pysentinel-app
+
+# Run asynchronously
+docker run --rm pysentinel-app pysentinel config.yml --async
+
+# Mount external config file
+docker run --rm -v /path/to/your/config.yml:/app/config.yml pysentinel-app
+
+# Run with environment variables for database connections
+docker run --rm \
+  -e DB_HOST=host.docker.internal \
+  -e DB_PORT=5432 \
+  -v /path/to/config.yml:/app/config.yml \
+  pysentinel-app
+```
+
+### Docker Compose Example
+create a `docker-compose.yml` file to run PySentinel with a PostgreSQL database:
+
+```yaml
+version: '3.8'
+
+services:
+  pysentinel:
+    image: python:3.11-slim
+    command: >
+      sh -c "pip install pysentinel && 
+             pysentinel /app/config.yml --async"
+    volumes:
+      - ./config.yml:/app/config.yml
+      - ./logs:/app/logs
+    environment:
+      - DB_HOST=postgres
+      - DB_USER=sentinel_user
+      - DB_PASSWORD=sentinel_pass
+    depends_on:
+      - postgres
+    restart: unless-stopped
+
+  postgres:
+    image: postgres:15
+    environment:
+      POSTGRES_DB: monitoring
+      POSTGRES_USER: sentinel_user
+      POSTGRES_PASSWORD: sentinel_pass
+    volumes:
+      - postgres_data:/var/lib/postgresql/data
+
+volumes:
+  postgres_data:
+```
+This `docker-compose.yml` sets up a PySentinel service that connects to a PostgreSQL database, allowing you to run the scanner with persistent data storage.
+
+### Run with Docker Compose:
+
+```bash
+# Start the monitoring stack
+docker-compose up -d
+
+# View logs
+docker-compose logs pysentinel
+
+# Stop the stack
+docker-compose down
+```
+
+### Production Docker Setup
+Multi-sage Dockerfile for production use:
+
+```dockerfile
+FROM python:3.11-slim as builder
+
+# Install dependencies
+RUN pip install --no-cache-dir pysentinel
+
+FROM python:3.11-slim
+
+# Copy installed packages
+COPY --from=builder /usr/local/lib/python3.11/site-packages /usr/local/lib/python3.11/site-packages
+COPY --from=builder /usr/local/bin/pysentinel /usr/local/bin/pysentinel
+
+# Create non-root user
+RUN useradd --create-home --shell /bin/bash sentinel
+
+# Set working directory
+WORKDIR /app
+
+# Change ownership
+RUN chown -R sentinel:sentinel /app
+
+# Switch to non-root user
+USER sentinel
+
+# Health check
+HEALTHCHECK --interval=30s --timeout=10s --start-period=5s --retries=3 \
+  CMD pysentinel --version || exit 1
+
+# Default command
+CMD ["pysentinel", "config.yml", "--async"]
+```
+
 ## Configuration
 Here’s how to use the `load_config()` function from `pysentinel.config.loader` to load your YAML config and start the scanner.  
 This approach works for both YAML and JSON config files.

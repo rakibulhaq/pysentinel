@@ -10,14 +10,14 @@ class DataSource(ABC):
     """Abstract base class for data sources"""
 
     def __init__(self, name: str, config: Dict, **kwargs):
-        self.interval = config.get('interval', 60)  # Default to 60 seconds
+        self.interval = config.get("interval", 60)  # Default to 60 seconds
         self.name = name
         self.config = config
-        self.enabled = config.get('enabled', False)
+        self.enabled = config.get("enabled", False)
         self.last_fetch_time = None
         self.error_count = 0
-        self.max_errors = config.get('max_retries', 5)
-        self.connection_timeout = config.get('timeout', 30)
+        self.max_errors = config.get("max_retries", 5)
+        self.connection_timeout = config.get("timeout", 30)
         self._connection = None
 
     @abstractmethod

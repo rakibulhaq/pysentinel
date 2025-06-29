@@ -4,7 +4,14 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3a9ac4df-1a52-4453-993c-0b016751ef66" name="Changes" comment="" />
+    <list default="true" id="3a9ac4df-1a52-4453-993c-0b016751ef66" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/tests/conftest.py" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/tests/pysentinel/cli/test_cli.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pysentinel/cli/commands.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysentinel/cli/cli.py" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
@@ -48,7 +55,7 @@
     "Python tests.Python tests for threshold.TestThreshold.test_alert_definition_create_violation.executor": "Run",
     "Python tests.Python tests for threshold.TestThreshold.test_metric_data_to_dict.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "main",
+    "git-widget-placeholder": "7-add-cli-functionality",
     "last_opened_file_path": "/Users/rakibulhaq/Projects/packages/python/pysentinel/assets"
   }
 }]]></component>
@@ -61,7 +68,7 @@
       <recent name="$PROJECT_DIR$/tests/pysentinel" />
     </key>
   </component>
-  <component name="RunManager" selected="Python tests.Python tests for test_scanner.test_scanner_with_fixture_config">
+  <component name="RunManager">
     <configuration name="Python tests for test_scanner.test_scan_once_async_disables_datasource_after_max_errors" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pysentinel" />
       <option name="ENV_FILES" value="" />

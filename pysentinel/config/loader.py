@@ -13,8 +13,8 @@ def load_config(config: Union[str, Dict]):
     _config = None
     try:
         if isinstance(config, str):
-            with open(config, 'r') as f:
-                if config.endswith('.yaml') or config.endswith('.yml'):
+            with open(config, "r") as f:
+                if config.endswith(".yaml") or config.endswith(".yml"):
                     _config = yaml.safe_load(f)
                 else:
                     _config = json.load(f)

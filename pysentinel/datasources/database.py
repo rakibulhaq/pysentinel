@@ -10,7 +10,8 @@ class PostgreSQLDataSource(DataSource):
     async def connect(self):
         if not self._connection:
             import asyncpg
-            self._connection = await asyncpg.connect(self.config['connection_string'])
+
+            self._connection = await asyncpg.connect(self.config["connection_string"])
 
     async def close(self):
         if self._connection:
