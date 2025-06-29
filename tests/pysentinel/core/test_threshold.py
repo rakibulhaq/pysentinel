@@ -16,7 +16,7 @@ class TestThreshold:
             severity=Severity.CRITICAL,
             message="CPU usage is too high",
             timestamp=now,
-            datasource_name="server1"
+            datasource_name="server1",
         )
         d = v.to_dict()
         assert d["alert_name"] == "CPU High"
@@ -30,7 +30,7 @@ class TestThreshold:
             datasource_name="db1",
             metrics={"connections": 10},
             timestamp=now,
-            collection_time_ms=123.4
+            collection_time_ms=123.4,
         )
         d = m.to_dict()
         assert d["datasource_name"] == "db1"
@@ -48,7 +48,7 @@ class TestThreshold:
             severity=Severity.WARNING,
             interval=60,
             alert_channels=["email"],
-            description="Memory is low"
+            description="Memory is low",
         )
         v = ad.create_violation(current_value=80, datasource_name="server2")
         assert isinstance(v, Violation)
@@ -67,7 +67,7 @@ class TestThreshold:
             severity=Severity.CRITICAL,
             interval=60,
             alert_channels=["slack"],
-            description="Disk usage is high"
+            description="Disk usage is high",
         )
         assert ad.check_threshold(85) is True
         assert ad.check_threshold(75) is False
@@ -82,7 +82,7 @@ class TestThreshold:
             severity=Severity.WARNING,
             interval=60,
             alert_channels=["telegram"],
-            description="Temperature is low"
+            description="Temperature is low",
         )
         assert ad.check_threshold(5) is True
         assert ad.check_threshold(15) is False
@@ -97,9 +97,7 @@ class TestThreshold:
             severity=Severity.INFO,
             interval=60,
             alert_channels=[],
-            description="No threshold"
+            description="No threshold",
         )
         assert ad.check_threshold("not_a_number") is False
         assert ad.check_threshold(None) is False
-
-

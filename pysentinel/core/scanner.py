@@ -71,30 +71,30 @@ class Scanner:
         config = self._config
 
         # Setup global configuration
-        self._global_config = config.get('global', {})
+        self._global_config = config.get("global", {})
 
         # Setup data sources
-        self._setup_datasources(config.get('datasources', {}))
+        self._setup_datasources(config.get("datasources", {}))
 
         # Setup alert channels
-        self._setup_channels(config.get('alert_channels', {}))
+        self._setup_channels(config.get("alert_channels", {}))
 
         # Setup alert groups and their alerts
-        self._setup_alert_groups(config.get('alert_groups', {}))
+        self._setup_alert_groups(config.get("alert_groups", {}))
 
     def _setup_datasources(self, datasources_config: Dict):
         """Setup data sources from configuration"""
         datasource_factories = {
-            'postgresql': PostgreSQLDataSource,
-            'http': HTTPDataSource,
-            'redis': RedisDataSource,
-            'prometheus': PrometheusDataSource,
-            'elasticsearch': ElasticsearchDataSource
+            "postgresql": PostgreSQLDataSource,
+            "http": HTTPDataSource,
+            "redis": RedisDataSource,
+            "prometheus": PrometheusDataSource,
+            "elasticsearch": ElasticsearchDataSource,
         }
 
         for name, config in datasources_config.items():
-            ds_type = config.get('type')
-            ds_enabled = config.get('enabled', False)
+            ds_type = config.get("type")
+            ds_enabled = config.get("enabled", False)
 
             if ds_type in datasource_factories and ds_enabled:
                 try:
@@ -109,14 +109,14 @@ class Scanner:
     def _setup_channels(self, channel_config: Dict):
         """Setup alert channels from configuration"""
         channel_factory = {
-            'email': Email,
-            'slack': Slack,
-            'webhook': Webhook,
-            'telegram': Telegram
+            "email": Email,
+            "slack": Slack,
+            "webhook": Webhook,
+            "telegram": Telegram,
         }
 
         for name, config in channel_config.items():
-            channel_type = config.get('type')
+            channel_type = config.get("type")
             if channel_type in channel_factory:
                 try:
                     channel = channel_factory[channel_type](name, config)
@@ -130,34 +130,38 @@ class Scanner:
     def _setup_alert_groups(self, alert_groups_config: Dict):
         """Setup alert groups and their alerts from configuration"""
         for group_name, group_config in alert_groups_config.items():
-            if not group_config.get('enabled', True):
+            if not group_config.get("enabled", True):
                 continue
 
             self.alert_groups[group_name] = group_config
 
             # Setup alerts within this group
-            for alert_config in group_config.get('alerts', []):
+            for alert_config in group_config.get("alerts", []):
                 try:
                     alert_def = AlertDefinition(
-                        name=alert_config['name'],
-                        metrics=alert_config['metrics'],
-                        query=alert_config['query'],
-                        datasource=alert_config['datasource'],
-                        threshold=alert_config['threshold'],
-                        severity=Severity(alert_config['severity']),
-                        interval=alert_config['interval'],
-                        alert_channels=alert_config['alert_channels'],
-                        description=alert_config['description'],
-                        alert_group=group_name
+                        name=alert_config["name"],
+                        metrics=alert_config["metrics"],
+                        query=alert_config["query"],
+                        datasource=alert_config["datasource"],
+                        threshold=alert_config["threshold"],
+                        severity=Severity(alert_config["severity"]),
+                        interval=alert_config["interval"],
+                        alert_channels=alert_config["alert_channels"],
+                        description=alert_config["description"],
+                        alert_group=group_name,
                     )
                     self.alert_definitions.append(alert_def)
-                    logger.info(f"Added alert '{alert_def.name}' to group '{group_name}'")
+                    logger.info(
+                        f"Added alert '{alert_def.name}' to group '{group_name}'"
+                    )
                 except Exception as e:
-                    logger.error(f"Failed to create alert {alert_config.get('name')}: {e}")
+                    logger.error(
+                        f"Failed to create alert {alert_config.get('name')}: {e}"
+                    )
 
     def _should_send_alert(self, violation: Violation) -> bool:
         """Check if alert should be sent based on cooldown"""
-        cooldown_minutes = self._global_config.get('alert_cooldown_minutes', 5)
+        cooldown_minutes = self._global_config.get("alert_cooldown_minutes", 5)
         cooldown_key = f"{violation.datasource_name}_{violation.alert_name}"
 
         if cooldown_key in self._alert_cooldowns:
@@ -278,10 +282,14 @@ class Scanner:
         for datasource_name, alerts in alerts_by_datasource.items():
             # Check if the datasource is enabled and exists
             if datasource_name not in self.datasources:
-                logger.warning(f"Datasource '{datasource_name}' not found, skipping alerts")
+                logger.warning(
+                    f"Datasource '{datasource_name}' not found, skipping alerts"
+                )
                 continue
             if not self.datasources[datasource_name].enabled:
-                logger.warning(f"Datasource '{datasource_name}' is disabled, skipping alerts")
+                logger.warning(
+                    f"Datasource '{datasource_name}' is disabled, skipping alerts"
+                )
                 continue
 
             if datasource_name in self.datasources:
@@ -297,18 +305,25 @@ class Scanner:
         scan_duration = time.time() - scan_start
         logger.debug(f"Scan completed in {scan_duration:.2f}s")
 
-    def _should_check_alert(self, alert_def: AlertDefinition, current_time: datetime) -> bool:
+    def _should_check_alert(
+        self, alert_def: AlertDefinition, current_time: datetime
+    ) -> bool:
         """Check if an alert should be evaluated based on its interval"""
         if not alert_def.enabled:
             return False
         if alert_def.interval <= 0:
             return True
         last_run = self._alert_db.get_last_run(alert_def.name)
-        if not last_run or (current_time - last_run).total_seconds() >= alert_def.interval:
+        if (
+            not last_run
+            or (current_time - last_run).total_seconds() >= alert_def.interval
+        ):
             return True
         return False
 
-    async def _check_alerts_for_datasource(self, datasource_name: str, alerts: List[AlertDefinition]):
+    async def _check_alerts_for_datasource(
+        self, datasource_name: str, alerts: List[AlertDefinition]
+    ):
         """Check all alerts for a specific datasource"""
         datasource = self.datasources[datasource_name]
 
@@ -326,7 +341,9 @@ class Scanner:
 
                     # Check threshold
                     if alert_def.check_threshold(metric_value):
-                        violation = alert_def.create_violation(metric_value, datasource_name)
+                        violation = alert_def.create_violation(
+                            metric_value, datasource_name
+                        )
                         await self._handle_violation(violation)
                     else:
                         # Clear any existing violation for this alert
@@ -338,16 +355,20 @@ class Scanner:
                 metric_data = MetricData(
                     datasource_name=datasource_name,
                     metrics=result,
-                    timestamp=datetime.now()
+                    timestamp=datetime.now(),
                 )
                 self._latest_metrics[datasource_name] = metric_data
 
             except Exception as e:
-                logger.error(f"Error checking alert '{alert_def.name}' on datasource '{datasource_name}': {e}")
+                logger.error(
+                    f"Error checking alert '{alert_def.name}' on datasource '{datasource_name}': {e}"
+                )
                 datasource.error_count += 1
 
                 if datasource.error_count >= datasource.max_errors:
-                    logger.error(f"Disabling datasource {datasource_name} due to too many errors")
+                    logger.error(
+                        f"Disabling datasource {datasource_name} due to too many errors"
+                    )
                     datasource.enabled = False
 
     async def _handle_violation(self, violation: Violation):
@@ -375,7 +396,9 @@ class Scanner:
                 logger.error(f"Error in violation callback: {e}")
 
         # Send alerts to configured channels
-        alert_def = next((a for a in self.alert_definitions if a.name == violation.alert_name), None)
+        alert_def = next(
+            (a for a in self.alert_definitions if a.name == violation.alert_name), None
+        )
         if alert_def:
             for channel_name in alert_def.alert_channels:
                 if channel_name in self.alert_channels:
@@ -422,7 +445,9 @@ class Scanner:
 
     async def get_alert_history_async(self, limit: int = 100) -> List[Dict]:
         """Get alert history"""
-        recent_violations = self._violation_history[-limit:] if limit else self._violation_history
+        recent_violations = (
+            self._violation_history[-limit:] if limit else self._violation_history
+        )
         return [violation.to_dict() for violation in recent_violations]
 
     async def acknowledge_alert_async(self, alert_id: str) -> bool:
@@ -451,12 +476,12 @@ class Scanner:
             new_thresholds = []
             for config in thresholds_config:
                 threshold = Threshold(
-                    metric_name=config['metric'],
-                    operator=config['operator'],
-                    value=config['value'],
-                    severity=Severity(config.get('severity', Severity.WARNING)),
-                    message=config.get('message'),
-                    datasource_filter=config.get('datasource_filter')
+                    metric_name=config["metric"],
+                    operator=config["operator"],
+                    value=config["value"],
+                    severity=Severity(config.get("severity", Severity.WARNING)),
+                    message=config.get("message"),
+                    datasource_filter=config.get("datasource_filter"),
                 )
                 new_thresholds.append(threshold)
 
@@ -474,7 +499,9 @@ class Scanner:
 
     async def remove_datasource_async(self, datasource_name: str):
         """Remove data source dynamically"""
-        datasource = next((ds for ds in self.datasources if ds.name == datasource_name), None)
+        datasource = next(
+            (ds for ds in self.datasources if ds.name == datasource_name), None
+        )
         if datasource:
             await datasource.close()
             self.remove_datasource(datasource_name)
@@ -507,8 +534,9 @@ class Scanner:
 
             # Check for new or updated metrics
             for source_name, metrics in current_metrics.items():
-                if (source_name not in last_metrics or
-                        metrics['timestamp'] != last_metrics.get(source_name, {}).get('timestamp')):
+                if source_name not in last_metrics or metrics[
+                    "timestamp"
+                ] != last_metrics.get(source_name, {}).get("timestamp"):
                     yield {source_name: metrics}
 
             last_metrics = current_metrics

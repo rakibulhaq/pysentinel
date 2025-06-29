@@ -11,8 +11,9 @@ class RedisDataSource(DataSource):
     async def connect(self):
         if not self._connection:
             import aioredis
-            password = self.config.get('password', '')
-            if password.startswith('${') and password.endswith('}'):
+
+            password = self.config.get("password", "")
+            if password.startswith("${") and password.endswith("}"):
                 env_var = password[2:-1]
                 password = os.getenv(env_var, password)
 
@@ -30,15 +31,19 @@ class RedisDataSource(DataSource):
         try:
             if query == "INFO stats":
                 info = await self._connection.info("stats")
-                hit_rate = (info.get('keyspace_hits', 0) / max(
-                    info.get('keyspace_hits', 0) + info.get('keyspace_misses', 0), 1)) * 100
+                hit_rate = (
+                    info.get("keyspace_hits", 0)
+                    / max(
+                        info.get("keyspace_hits", 0) + info.get("keyspace_misses", 0), 1
+                    )
+                ) * 100
                 return {"hit_rate": hit_rate}
             elif query == "INFO memory":
                 info = await self._connection.info("memory")
-                return {"memory_usage": info.get('used_memory_rss', 0)}
+                return {"memory_usage": info.get("used_memory_rss", 0)}
             elif query == "INFO clients":
                 info = await self._connection.info("clients")
-                return {"connected_clients": info.get('connected_clients', 0)}
+                return {"connected_clients": info.get("connected_clients", 0)}
             else:
                 return {}
         except Exception as e:

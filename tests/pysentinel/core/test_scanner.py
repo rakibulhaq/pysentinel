@@ -15,11 +15,14 @@ def minimal_config():
     return {
         "global": {"log_level": "INFO"},
         "datasources": {
-            "testdb": {"type": "postgresql", "enabled": True, "interval": 60, "config": {"host": "localhost", "port": 5432}},
+            "testdb": {
+                "type": "postgresql",
+                "enabled": True,
+                "interval": 60,
+                "config": {"host": "localhost", "port": 5432},
+            },
         },
-        "alert_channels": {
-            "email1": {"type": "email"}
-        },
+        "alert_channels": {"email1": {"type": "email"}},
         "alert_groups": {
             "group1": {
                 "enabled": True,
@@ -33,11 +36,11 @@ def minimal_config():
                         "severity": "critical",
                         "interval": 60,
                         "alert_channels": ["email1"],
-                        "description": "CPU usage high"
+                        "description": "CPU usage high",
                     }
-                ]
+                ],
             }
-        }
+        },
     }
 
 
@@ -89,7 +92,7 @@ async def test_handle_violation_sends_alert():
         severity=Severity("critical"),
         interval=60,
         alert_channels=["chan"],
-        description="desc"
+        description="desc",
     )
     scanner.alert_definitions = [alert_def]
 
@@ -107,6 +110,7 @@ def test_get_uptime_seconds(monkeypatch):
     scanner = Scanner()
     assert scanner.get_uptime_seconds() == 0
     from datetime import datetime, timedelta
+
     scanner.start_time = datetime.now() - timedelta(seconds=10)
     assert 9 <= scanner.get_uptime_seconds() <= 11
 
@@ -116,7 +120,7 @@ def test_get_datasources():
     scanner.datasources = [
         MagicMock(name="ds1"),
         MagicMock(name="ds2", type="postgresql"),
-        MagicMock(name="ds3", type="mysql")
+        MagicMock(name="ds3", type="mysql"),
     ]
     datasources = scanner.get_datasources()
     assert len(datasources) == 3
@@ -129,7 +133,7 @@ def test_get_metric_count_async():
     scanner = Scanner()
     scanner._latest_metrics = {
         "ds1": MagicMock(metrics={"a": 1, "b": 2}),
-        "ds2": MagicMock(metrics={"c": 3})
+        "ds2": MagicMock(metrics={"c": 3}),
     }
     assert scanner.get_metric_count_async() == 3
 
@@ -137,6 +141,7 @@ def test_get_metric_count_async():
 @pytest.fixture
 def config_from_yaml():
     import os
+
     config_path = os.path.join(os.path.dirname(__file__), "../fixtures/config.yml")
     with open(config_path, "r") as f:
         return yaml.safe_load(f)
@@ -174,7 +179,9 @@ async def test_scan_once_async_groups_alerts_by_datasource():
     scanner._should_check_alert = MagicMock(return_value=True)
     scanner._check_alerts_for_datasource = AsyncMock()
     await scanner.scan_once_async()
-    scanner._check_alerts_for_datasource.assert_any_await("ds1", [alert_def_1, alert_def_3])
+    scanner._check_alerts_for_datasource.assert_any_await(
+        "ds1", [alert_def_1, alert_def_3]
+    )
     scanner._check_alerts_for_datasource.assert_any_await("ds2", [alert_def_2])
 
 
@@ -233,6 +240,7 @@ async def test_scanner_does_not_send_alert_if_cooldown_active():
     mock_channel.send_alert = AsyncMock()
     scanner.alert_channels = {"chan": mock_channel}
     from pysentinel.core.threshold import AlertDefinition
+
     alert_def = AlertDefinition(
         name="alert",
         metrics="cpu",
@@ -242,7 +250,7 @@ async def test_scanner_does_not_send_alert_if_cooldown_active():
         severity=Severity("critical"),
         interval=60,
         alert_channels=["chan"],
-        description="desc"
+        description="desc",
     )
     scanner.alert_definitions = [alert_def]
     await scanner._handle_violation(violation)

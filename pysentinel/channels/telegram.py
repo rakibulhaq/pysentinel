@@ -10,18 +10,20 @@ class Telegram(AlertChannel):
 
         try:
             payload = {
-                "chat_id": self.config['chat_id'],
+                "chat_id": self.config["chat_id"],
                 "text": f"🚨 *{violation.severity.value.upper()}* Alert: {violation.alert_name}\n"
-                        f"Message: {violation.message}\n"
-                        f"Current Value: {violation.current_value}\n"
-                        f"Threshold: {violation.operator} {violation.threshold_value}\n"
-                        f"Datasource: {violation.datasource_name}\n"
-                        f"Time: {violation.timestamp.strftime('%Y-%m-%d %H:%M:%S UTC')}",
+                f"Message: {violation.message}\n"
+                f"Current Value: {violation.current_value}\n"
+                f"Threshold: {violation.operator} {violation.threshold_value}\n"
+                f"Datasource: {violation.datasource_name}\n"
+                f"Time: {violation.timestamp.strftime('%Y-%m-%d %H:%M:%S UTC')}",
                 "parse_mode": "Markdown",
             }
 
             async with aiohttp.ClientSession() as session:
-                async with session.post(self.config['webhook_url'], json=payload) as response:
+                async with session.post(
+                    self.config["webhook_url"], json=payload
+                ) as response:
                     return response.status == 200
         except Exception as e:
             logger.error(f"Failed to send Telegram alert: {e}")
