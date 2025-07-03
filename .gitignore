@@ -23,9 +23,6 @@ var/
 .installed.cfg
 *.egg
 
-# Poetry
-poetry.lock
-
 # PyInstaller
 *.manifest
 *.spec

@@ -1,6 +1,6 @@
 [tool.poetry]
 name = "pysentinel"
-version = "0.1.4"
+version = "0.1.5"
 description = "A python package for threshold based alerting using simple configuration."
 authors = [
     "Rakibul Haq <haq.rakibul@gmail.com>",
