@@ -5,12 +5,9 @@
   </component>
   <component name="ChangeListManager">
     <list default="true" id="3a9ac4df-1a52-4453-993c-0b016751ef66" name="Changes" comment="">
-      <change afterPath="$PROJECT_DIR$/tests/conftest.py" afterDir="false" />
-      <change afterPath="$PROJECT_DIR$/tests/pysentinel/cli/test_cli.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/README.md" beforeDir="false" afterPath="$PROJECT_DIR$/README.md" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysentinel/cli/commands.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysentinel/cli/cli.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/assets/pysentinel.png" beforeDir="false" />
     </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -55,7 +52,7 @@
     "Python tests.Python tests for threshold.TestThreshold.test_alert_definition_create_violation.executor": "Run",
     "Python tests.Python tests for threshold.TestThreshold.test_metric_data_to_dict.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "7-add-cli-functionality",
+    "git-widget-placeholder": "9-update-readme",
     "last_opened_file_path": "/Users/rakibulhaq/Projects/packages/python/pysentinel/assets"
   }
 }]]></component>
@@ -68,7 +65,7 @@
       <recent name="$PROJECT_DIR$/tests/pysentinel" />
     </key>
   </component>
-  <component name="RunManager">
+  <component name="RunManager" selected="Python tests.Python tests for test_scanner.test_scan_once_async_disables_datasource_after_max_errors">
     <configuration name="Python tests for test_scanner.test_scan_once_async_disables_datasource_after_max_errors" type="tests" factoryName="Autodetect" temporary="true" nameIsGenerated="true">
       <module name="pysentinel" />
       <option name="ENV_FILES" value="" />
@@ -177,17 +174,17 @@
       <breakpoints>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/tests/pysentinel/core/test_scanner.py</url>
-          <line>51</line>
+          <line>54</line>
           <option name="timeStamp" value="1" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/pysentinel/core/scanner.py</url>
-          <line>286</line>
+          <line>294</line>
           <option name="timeStamp" value="3" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/tests/pysentinel/core/test_scanner.py</url>
-          <line>209</line>
+          <line>216</line>
           <option name="timeStamp" value="4" />
         </line-breakpoint>
       </breakpoints>

@@ -1,12 +1,12 @@
 # PySentinel
-[![pysentinel logo](assets/pysentinel.png)]()
-
+[![pysentinel logo](https://raw.githubusercontent.com/rakibulhaq/pysentinel/main/docs/logo.png)]
 [![PyPI version](https://img.shields.io/pypi/v/pysentinel.svg)](https://pypi.org/project/pysentinel/)
 [![Python versions](https://img.shields.io/pypi/pyversions/pysentinel.svg)](https://pypi.org/project/pysentinel/)
 [![Codecov](https://codecov.io/gh/rakibulhaq/pysentinel/branch/main/graph/badge.svg)](https://codecov.io/gh/rakibulhaq/pysentinel)
 [![Snyk](https://snyk.io/test/github/rakibulhaq/pysentinel/badge.svg)](https://snyk.io/test/github/rakibulhaq/pysentinel)
-[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 [![PyPI - Downloads](https://img.shields.io/pypi/dm/pysentinel.svg?label=PyPI%20downloads)](https://pypistats.org/packages/pysentinel)
+[![Downloads](https://pepy.tech/badge/pysentinel)](https://pepy.tech/project/pysentinel)
+[![License: MIT](https://img.shields.io/badge/License-MIT-green.svg)](LICENSE)
 
 
 
@@ -187,28 +187,6 @@ pysentinel --help
 
 # Show version
 pysentinel --version
-```
-
-### Configuration File
-
-Create a YAML or JSON configuration file:
-
-**Example `config.yml`:**
-```yaml
-scanner:
-  interval: 30
-  timeout: 10
-
-alerts:
-  email:
-    enabled: true
-    smtp_server: "smtp.example.com"
-    recipients:
-      - "admin@example.com"
-  
-thresholds:
-  cpu_usage: 80
-  memory_usage: 85
 ```
 
 ### CLI Examples
