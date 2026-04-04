@@ -9,9 +9,9 @@ class PostgreSQLDataSource(DataSource):
 
     async def connect(self):
         if not self._connection:
-            import asyncpg
+            import asyncpg  # type: ignore
 
-            self._connection = await asyncpg.connect(self.config["connection_string"])
+            self._connection = await asyncpg.connect(self.config["connection_string"])  # type: ignore[assignment]
 
     async def close(self):
         if self._connection:
@@ -21,7 +21,7 @@ class PostgreSQLDataSource(DataSource):
     async def fetch_data(self, query: str) -> Dict[str, Any]:
         await self.connect()
         try:
-            result = await self._connection.fetchrow(query)
+            result = await self._connection.fetchrow(query)  # type: ignore[attr-defined]
             return dict(result) if result else {}
         except Exception as e:
             logger.error(f"Error executing PostgreSQL query: {e}")

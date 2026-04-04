@@ -2,11 +2,12 @@ from datetime import datetime, timedelta
 
 import pytest
 from unittest.mock import patch, MagicMock, AsyncMock
+from types import SimpleNamespace
 
 import yaml
 
 from pysentinel.core.scanner import Scanner
-from pysentinel.core.threshold import AlertDefinition, Violation, MetricData
+from pysentinel.core.threshold import Violation
 from pysentinel.utils.constants import ScannerStatus, Severity
 
 
@@ -117,16 +118,28 @@ def test_get_uptime_seconds(monkeypatch):
 
 def test_get_datasources():
     scanner = Scanner()
-    scanner.datasources = [
-        MagicMock(name="ds1"),
-        MagicMock(name="ds2", type="postgresql"),
-        MagicMock(name="ds3", type="mysql"),
-    ]
-    datasources = scanner.get_datasources()
-    assert len(datasources) == 3
-    assert all(isinstance(ds, MagicMock) for ds in datasources)
-    assert all(ds.name.startswith("ds") for ds in datasources)
-    assert datasources is not None
+    scanner.datasources = {
+        "ds1": SimpleNamespace(name="ds1"),
+        "ds2": SimpleNamespace(name="ds2", type="postgresql"),
+        "ds3": SimpleNamespace(name="ds3", type="mysql"),
+    }
+    names = scanner.get_datasources()
+    assert len(names) == 3
+    assert all(isinstance(n, str) for n in names)
+    assert all(n.startswith("ds") for n in names)
+
+
+def test_get_datasource_objects():
+    scanner = Scanner()
+    scanner.datasources = {
+        "ds1": SimpleNamespace(name="ds1"),
+        "ds2": SimpleNamespace(name="ds2", type="postgresql"),
+        "ds3": SimpleNamespace(name="ds3", type="mysql"),
+    }
+    objects = scanner.get_datasource_objects()
+    assert len(objects) == 3
+    assert all(hasattr(ds, "name") for ds in objects)
+    assert all(getattr(ds, "name").startswith("ds") for ds in objects)
 
 
 def test_get_metric_count_async():

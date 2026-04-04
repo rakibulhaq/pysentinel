@@ -1,5 +1,4 @@
-import pytest
-from datetime import datetime, timedelta
+from datetime import datetime
 from pysentinel.core.threshold import Violation, MetricData, AlertDefinition
 from pysentinel.utils.constants import Severity
 

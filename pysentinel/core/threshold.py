@@ -18,8 +18,8 @@ class Violation:
     message: str
     timestamp: datetime
     datasource_name: str
-    alert_group: str = None
-    violation_id: str = None
+    alert_group: Optional[str] = None
+    violation_id: Optional[str] = None
     acknowledged: bool = False
 
     def __post_init__(self):
@@ -64,7 +64,7 @@ class AlertDefinition:
     interval: int
     alert_channels: List[str]
     description: str
-    alert_group: str = None
+    alert_group: Optional[str] = None
     enabled: bool = True
 
     def create_violation(self, current_value: Any, datasource_name: str) -> Violation:
@@ -108,14 +108,14 @@ class Threshold:
         operator: str,
         value: float,
         severity: Severity = Severity.WARNING,
-        message: str = "",
+        message: Optional[str] = None,
         datasource_filter: Optional[str] = None,
     ):
         self.metric_name = metric_name
         self.operator = operator
         self.value = value
         self.severity = severity
-        self.message = message
+        self.message = message or ""
         self.datasource_filter = datasource_filter
 
     def __repr__(self):

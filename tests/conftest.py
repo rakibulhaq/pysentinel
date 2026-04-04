@@ -1,6 +1,5 @@
 import pytest
 import asyncio
-from pathlib import Path
 
 
 @pytest.fixture(scope="session")

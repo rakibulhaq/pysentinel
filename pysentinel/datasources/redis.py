@@ -10,7 +10,7 @@ class RedisDataSource(DataSource):
 
     async def connect(self):
         if not self._connection:
-            import aioredis
+            import aioredis  # type: ignore
 
             password = self.config.get("password", "")
             if password.startswith("${") and password.endswith("}"):
@@ -19,7 +19,7 @@ class RedisDataSource(DataSource):
 
             self._connection = await aioredis.from_url(
                 f"redis://:{password}@{self.config['host']}:{self.config['port']}/{self.config['db']}"
-            )
+            )  # type: ignore[assignment]
 
     async def close(self):
         if self._connection:
@@ -30,7 +30,7 @@ class RedisDataSource(DataSource):
         await self.connect()
         try:
             if query == "INFO stats":
-                info = await self._connection.info("stats")
+                info = await self._connection.info("stats")  # type: ignore[attr-defined]
                 hit_rate = (
                     info.get("keyspace_hits", 0)
                     / max(
@@ -39,10 +39,10 @@ class RedisDataSource(DataSource):
                 ) * 100
                 return {"hit_rate": hit_rate}
             elif query == "INFO memory":
-                info = await self._connection.info("memory")
+                info = await self._connection.info("memory")  # type: ignore[attr-defined]
                 return {"memory_usage": info.get("used_memory_rss", 0)}
             elif query == "INFO clients":
-                info = await self._connection.info("clients")
+                info = await self._connection.info("clients")  # type: ignore[attr-defined]
                 return {"connected_clients": info.get("connected_clients", 0)}
             else:
                 return {}
