@@ -3,7 +3,7 @@ from typing import Dict, Any
 
 from pysentinel.datasources.base import DataSource, logger
 from pysentinel.utils.exception import DataSourceException
-from elasticsearch import AsyncElasticsearch
+from elasticsearch import AsyncElasticsearch  # type: ignore
 
 
 class ElasticsearchDataSource(DataSource):
@@ -13,18 +13,18 @@ class ElasticsearchDataSource(DataSource):
         if not self._connection:
             self._connection = AsyncElasticsearch(
                 self.config["hosts"],
-            )
+            )  # type: ignore[assignment]
 
     async def close(self):
         if self._connection:
-            await self._connection.close()
+            await self._connection.close()  # type: ignore[attr-defined]
             self._connection = None
 
     async def fetch_data(self, query: str) -> Dict[str, Any]:
         await self.connect()
         try:
             query_dict = json.loads(query)
-            result = await self._connection.search(
+            result = await self._connection.search(  # type: ignore[attr-defined]
                 index=self.config["index_pattern"], body=query_dict
             )
 

@@ -1,10 +1,6 @@
 import pytest
-import asyncio
 from unittest.mock import Mock, patch, AsyncMock
-from pathlib import Path
 import argparse
-import sys
-from io import StringIO
 
 from pysentinel.cli.cli import (
     main,

@@ -4,7 +4,7 @@ import threading
 import time
 from concurrent.futures import ThreadPoolExecutor
 from datetime import datetime
-from typing import Dict, Union, List, Callable, Optional
+from typing import Dict, Union, List, Callable, Optional, Any, Type
 
 from pysentinel.config.loader import load_config
 from pysentinel.core.threshold import MetricData, Violation, AlertDefinition, Threshold
@@ -29,7 +29,7 @@ class Scanner:
     Scanner class to handle scanning operations.
     """
 
-    def __init__(self, config: Union[str, Dict] = None):
+    def __init__(self, config: Optional[Union[str, Dict[str, Any]]] = None):
         self.status = ScannerStatus.STOPPED
         self.datasources: Dict[str, DataSource] = {}
         self.alert_channels: Dict[str, AlertChannel] = {}
@@ -59,8 +59,8 @@ class Scanner:
         self._data_callbacks: List[Callable[[MetricData], MetricData]] = []
 
         # Configuration
-        self._config = {}
-        self._global_config = {}
+        self._config: Dict[str, Any] = {}
+        self._global_config: Dict[str, Any] = {}
 
         if config:
             self._config = load_config(config)
@@ -84,7 +84,7 @@ class Scanner:
 
     def _setup_datasources(self, datasources_config: Dict):
         """Setup data sources from configuration"""
-        datasource_factories = {
+        datasource_factories: Dict[str, Type[DataSource]] = {
             "postgresql": PostgreSQLDataSource,
             "http": HTTPDataSource,
             "redis": RedisDataSource,
@@ -98,7 +98,7 @@ class Scanner:
 
             if ds_type in datasource_factories and ds_enabled:
                 try:
-                    datasource = datasource_factories[ds_type](name, config)
+                    datasource = datasource_factories[ds_type](name, config)  # type: ignore[call-arg]
                     self.datasources[name] = datasource
                     logger.info(f"Added {ds_type} datasource: {name}")
                 except Exception as e:
@@ -108,7 +108,7 @@ class Scanner:
 
     def _setup_channels(self, channel_config: Dict):
         """Setup alert channels from configuration"""
-        channel_factory = {
+        channel_factory: Dict[str, Type[AlertChannel]] = {
             "email": Email,
             "slack": Slack,
             "webhook": Webhook,
@@ -119,7 +119,7 @@ class Scanner:
             channel_type = config.get("type")
             if channel_type in channel_factory:
                 try:
-                    channel = channel_factory[channel_type](name, config)
+                    channel = channel_factory[channel_type](name, config)  # type: ignore[call-arg]
                     self.alert_channels[name] = channel
                     logger.info(f"Added {channel_type} alert channel: {name}")
                 except Exception as e:
@@ -459,9 +459,10 @@ class Scanner:
                 return True
         return False
 
-    def get_datasources(self) -> List[str]:
-        """Get list of data source names"""
-        return [ds.name for ds in self.datasources]
+    def get_datasources(self) -> List[DataSource]:
+        """Get list of data source objects"""
+        # self.datasources is a mapping name -> DataSource, return the values
+        return list(self.datasources.values())
 
     def get_metric_count_async(self) -> int:
         """Get total number of metrics being collected"""
@@ -480,7 +481,7 @@ class Scanner:
                     operator=config["operator"],
                     value=config["value"],
                     severity=Severity(config.get("severity", Severity.WARNING)),
-                    message=config.get("message"),
+                    message=str(config.get("message")),  # Coerce to str
                     datasource_filter=config.get("datasource_filter"),
                 )
                 new_thresholds.append(threshold)
@@ -499,12 +500,16 @@ class Scanner:
 
     async def remove_datasource_async(self, datasource_name: str):
         """Remove data source dynamically"""
-        datasource = next(
-            (ds for ds in self.datasources if ds.name == datasource_name), None
-        )
+        # Look up datasource by name in the mapping and remove it safely
+        datasource = self.datasources.get(datasource_name)
         if datasource:
-            await datasource.close()
-            self.remove_datasource(datasource_name)
+            try:
+                await datasource.close()
+            except Exception as e:
+                logger.error(f"Error closing datasource {datasource_name}: {e}")
+
+            # Remove from the mapping
+            self.datasources.pop(datasource_name, None)
         else:
             raise DataSourceException(f"Data source '{datasource_name}' not found")
 
