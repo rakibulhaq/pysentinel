@@ -4,11 +4,28 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3a9ac4df-1a52-4453-993c-0b016751ef66" name="Changes" comment="" />
+    <list default="true" id="3a9ac4df-1a52-4453-993c-0b016751ef66" name="Changes" comment="">
+      <change afterPath="$PROJECT_DIR$/Makefile" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/build.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/coverage.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/format.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/lint.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/publish.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/test.sh" afterDir="false" />
+      <change afterPath="$PROJECT_DIR$/scripts/typecheck.sh" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/poetry.lock" beforeDir="false" afterPath="$PROJECT_DIR$/poetry.lock" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/pyproject.toml" beforeDir="false" afterPath="$PROJECT_DIR$/pyproject.toml" afterDir="false" />
+    </list>
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
+  </component>
+  <component name="CopilotPersistence">
+    <persistenceIdMap>
+      <entry key="_/Users/rakibulhaq/Projects/packages/python/pysentinel" value="2yVIOHD6VrMEPCcNIN9i7IcUjof" />
+    </persistenceIdMap>
   </component>
   <component name="FileTemplateManagerImpl">
     <option name="RECENT_TEMPLATES">
@@ -48,7 +65,7 @@
     "Python tests.Python tests for threshold.TestThreshold.test_alert_definition_create_violation.executor": "Run",
     "Python tests.Python tests for threshold.TestThreshold.test_metric_data_to_dict.executor": "Run",
     "RunOnceActivity.ShowReadmeOnStart": "true",
-    "git-widget-placeholder": "9-update-readme",
+    "git-widget-placeholder": "feature/maintainance-apr-26",
     "last_opened_file_path": "/Users/rakibulhaq/Projects/packages/python/pysentinel"
   }
 }]]></component>
@@ -185,5 +202,13 @@
         </line-breakpoint>
       </breakpoints>
     </breakpoint-manager>
+  </component>
+  <component name="github-copilot-workspace">
+    <instructionFileLocations>
+      <option value=".github/instructions" />
+    </instructionFileLocations>
+    <promptFileLocations>
+      <option value=".github/prompts" />
+    </promptFileLocations>
   </component>
 </project>
