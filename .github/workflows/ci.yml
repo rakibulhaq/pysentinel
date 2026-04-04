@@ -42,7 +42,7 @@ jobs:
 
       - name: Run pre-commit (format/lint/typecheck hooks)
         run: |
-          poetry run pre-commit run --all-files || true
+          poetry run pre-commit run --all-files
 
       - name: Lint (ruff)
         run: |

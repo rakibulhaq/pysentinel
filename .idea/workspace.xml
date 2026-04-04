@@ -4,20 +4,7 @@
     <option name="autoReloadType" value="SELECTIVE" />
   </component>
   <component name="ChangeListManager">
-    <list default="true" id="3a9ac4df-1a52-4453-993c-0b016751ef66" name="Changes" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysentinel/channels/__init__.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysentinel/channels/__init__.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysentinel/config/loader.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysentinel/config/loader.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysentinel/core/scanner.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysentinel/core/scanner.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysentinel/core/threshold.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysentinel/core/threshold.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysentinel/datasources/database.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysentinel/datasources/database.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysentinel/datasources/elasticsearch.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysentinel/datasources/elasticsearch.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/pysentinel/datasources/redis.py" beforeDir="false" afterPath="$PROJECT_DIR$/pysentinel/datasources/redis.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/conftest.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/conftest.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/pysentinel/cli/test_cli.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/pysentinel/cli/test_cli.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/pysentinel/core/test_scanner.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/pysentinel/core/test_scanner.py" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/tests/pysentinel/core/test_threshold.py" beforeDir="false" afterPath="$PROJECT_DIR$/tests/pysentinel/core/test_threshold.py" afterDir="false" />
-    </list>
+    <list default="true" id="3a9ac4df-1a52-4453-993c-0b016751ef66" name="Changes" comment="" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />

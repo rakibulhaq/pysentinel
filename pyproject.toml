@@ -21,10 +21,12 @@ pytest = "^8.3.5"
 pytest-mock = "^3.14.1"
 pytest-cov = "^6.1.1"
 pytest-asyncio = "^1.0.0"
-ruff = "*"
-mypy = "*"
-flake8 = "*"
-pre-commit = "*"
+# Use conservative, bounded version ranges for developer tools to avoid surprises
+# These ranges are wide enough to get recent versions while preventing major breaking releases.
+ruff = ">=0.6.0,<1.0.0"
+mypy = ">=1.0.0,<2.0.0"
+flake8 = ">=5.0.0,<7.0.0"
+pre-commit = ">=3.0.0,<4.0.0"
 
 
 [build-system]
