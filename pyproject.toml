@@ -29,6 +29,20 @@ flake8 = ">=5.0.0,<7.0.0"
 pre-commit = ">=3.0.0,<4.0.0"
 
 
+[tool.pytest.ini_options]
+testpaths = ["tests"]
+
+[tool.black]
+target-version = ["py39"]
+
+# Explicit config so results don't depend on a contributor's user-level ruff config
+[tool.ruff]
+target-version = "py39"
+
+[tool.ruff.lint]
+select = ["E4", "E7", "E9", "F"]
+
+
 [build-system]
 requires = ["poetry-core>=2.0.0,<3.0.0"]
 build-backend = "poetry.core.masonry.api"

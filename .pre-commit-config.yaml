@@ -16,4 +16,5 @@ repos:
         name: mypy
         entry: poetry run mypy
         language: system
-        files: "\\.py$"
+        # Match `make typecheck` / CI, which only typecheck the package
+        files: "^pysentinel/.*\\.py$"
