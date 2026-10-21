@@ -7,7 +7,14 @@ from pysentinel.cli.cli import (
     start_scanner_sync,
     start_scanner_async,
     validate_config_file,
+    get_version,
 )
+
+
+def _close_coroutine(coro):
+    """Stand-in for a mocked asyncio.run: close the coroutine so it is not
+    garbage-collected unawaited, which warns on whichever test runs next"""
+    coro.close()
 
 
 class TestValidateConfigFile:
@@ -159,6 +166,7 @@ class TestMainCLI:
         """Test main function in async mode"""
         config_file = tmp_path / "config.yml"
         config_file.write_text("test: config")
+        mock_asyncio_run.side_effect = _close_coroutine
 
         with patch("sys.argv", ["pysentinel", str(config_file), "--async"]):
             main()
@@ -185,7 +193,7 @@ class TestMainCLI:
 
         assert exc_info.value.code == 0
         captured = capsys.readouterr()
-        assert "PySentinel CLI 0.1.0" in captured.out
+        assert f"PySentinel CLI {get_version()}" in captured.out
 
     def test_main_invalid_config_file(self, capsys):
         """Test main with invalid config file"""
@@ -239,6 +247,7 @@ class TestCLIIntegration:
         """Test complete asynchronous workflow"""
         config_file = tmp_path / "config.yml"
         config_file.write_text("scanner:\n  interval: 10")
+        mock_asyncio_run.side_effect = _close_coroutine
 
         with patch("sys.argv", ["pysentinel", str(config_file), "--async"]):
             main()

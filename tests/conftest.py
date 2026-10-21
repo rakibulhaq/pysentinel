@@ -1,13 +1,12 @@
 import pytest
-import asyncio
 
 
-@pytest.fixture(scope="session")
-def event_loop():
-    """Create an instance of the default event loop for the test session."""
-    loop = asyncio.get_event_loop_policy().new_event_loop()
-    yield loop
-    loop.close()
+@pytest.fixture(autouse=True)
+def isolated_cwd(tmp_path, monkeypatch):
+    """Run each test in its own directory so files the scanner writes relative
+    to the CWD (e.g. alerts.db) never leak between tests or into the repo"""
+    monkeypatch.chdir(tmp_path)
+    return tmp_path
 
 
 @pytest.fixture

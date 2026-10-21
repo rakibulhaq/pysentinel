@@ -296,7 +296,7 @@ async def test_scanner_acknowledge_alert_async_acknowledges_violation():
 
 
 @pytest.mark.asyncio
-async def scanner_acknowledge_alert_async_returns_false_for_missing():
+async def test_scanner_acknowledge_alert_async_returns_false_for_missing():
     scanner = Scanner()
     scanner._active_violations = {}
     result = await scanner.acknowledge_alert_async("notfound")
@@ -311,3 +311,72 @@ def test_scanner_get_metric_count_async_returns_correct_count():
     metric_data2.metrics = {"c": 3}
     scanner._latest_metrics = {"ds1": metric_data1, "ds2": metric_data2}
     assert scanner.get_metric_count_async() == 3
+
+
+def _interval_alert(interval=300):
+    from pysentinel.core.threshold import AlertDefinition
+
+    return AlertDefinition(
+        name="cpu_high",
+        metrics="cpu",
+        query="SELECT cpu",
+        datasource="ds1",
+        threshold={"max": 90},
+        severity=Severity.WARNING,
+        interval=interval,
+        alert_channels=[],
+        description="CPU high",
+    )
+
+
+@pytest.mark.asyncio
+async def test_scan_once_async_respects_alert_interval():
+    scanner = Scanner()
+    scanner.alert_definitions = [_interval_alert(interval=300)]
+    datasource = MagicMock(enabled=True, error_count=0, max_errors=3)
+    datasource.fetch_data = AsyncMock(return_value={"cpu": 10})
+    scanner.datasources = {"ds1": datasource}
+
+    for _ in range(3):
+        await scanner.scan_once_async()
+
+    datasource.fetch_data.assert_awaited_once()
+
+
+@pytest.mark.asyncio
+async def test_scan_once_async_reruns_alert_after_interval_elapses():
+    scanner = Scanner()
+    scanner.alert_definitions = [_interval_alert(interval=300)]
+    datasource = MagicMock(enabled=True, error_count=0, max_errors=3)
+    datasource.fetch_data = AsyncMock(return_value={"cpu": 10})
+    scanner.datasources = {"ds1": datasource}
+
+    await scanner.scan_once_async()
+    scanner._alert_db.update_last_run(
+        "cpu_high", datetime.now() - timedelta(seconds=301)
+    )
+    await scanner.scan_once_async()
+
+    assert datasource.fetch_data.await_count == 2
+
+
+@pytest.mark.asyncio
+async def test_failed_query_still_waits_for_interval():
+    scanner = Scanner()
+    scanner.alert_definitions = [_interval_alert(interval=300)]
+    datasource = MagicMock(enabled=True, error_count=0, max_errors=3)
+    datasource.fetch_data = AsyncMock(side_effect=Exception("Query error"))
+    scanner.datasources = {"ds1": datasource}
+
+    for _ in range(3):
+        await scanner.scan_once_async()
+
+    datasource.fetch_data.assert_awaited_once()
+    assert datasource.enabled is True
+
+
+def test_scanner_uses_configured_alert_db_path(tmp_path):
+    db_path = tmp_path / "custom.db"
+    scanner = Scanner(config={"global": {"alert_db_path": str(db_path)}})
+    scanner._alert_db.update_last_run("cpu_high", datetime.now())
+    assert db_path.exists()

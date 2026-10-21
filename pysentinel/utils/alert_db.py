@@ -1,9 +1,11 @@
 import sqlite3
 from datetime import datetime
 
+DEFAULT_DB_PATH = "alerts.db"
+
 
 class AlertDB:
-    def __init__(self, db_path="alerts.db"):
+    def __init__(self, db_path=DEFAULT_DB_PATH):
         self.conn = sqlite3.connect(db_path, check_same_thread=False)
         self._create_table()
 
@@ -36,3 +38,6 @@ class AlertDB:
             """,
                 (alert_name, run_time.isoformat()),
             )
+
+    def close(self):
+        self.conn.close()
