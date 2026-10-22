@@ -10,57 +10,40 @@ jobs:
   test:
     runs-on: ubuntu-latest
     strategy:
+      fail-fast: false
       matrix:
-        python-version: [3.9, 3.11]
+        python-version: ["3.10", "3.11", "3.12", "3.13"]
+    env:
+      # Secrets can't be referenced in step `if:` conditions, so expose it via env
+      CODECOV_TOKEN: ${{ secrets.CODECOV_TOKEN }}
 
     steps:
       - name: Checkout
         uses: actions/checkout@v4
 
+      - name: Install Poetry
+        run: pipx install poetry
+
       - name: Set up Python
         uses: actions/setup-python@v5
         with:
           python-version: ${{ matrix.python-version }}
-
-      - name: Install Poetry
-        run: |
-          python -m pip install --upgrade pip
-          pip install poetry
+          cache: poetry
 
       - name: Install dependencies (including dev)
         run: |
-          poetry config virtualenvs.in-project true
+          poetry env use python${{ matrix.python-version }}
           poetry install --with dev
 
-      - name: Cache Poetry virtualenv (optional)
-        uses: actions/cache@v4
-        with:
-          path: .venv
-          key: ${{ runner.os }}-poetry-${{ hashFiles('**/poetry.lock') }}
-          restore-keys: |
-            ${{ runner.os }}-poetry-
-
-      - name: Run pre-commit (format/lint/typecheck hooks)
-        run: |
-          poetry run pre-commit run --all-files
-
-      - name: Lint (ruff)
-        run: |
-          poetry run ruff check .
-
-      - name: Typecheck (mypy)
-        run: |
-          poetry run mypy pysentinel
-
-      - name: Run tests with coverage
-        run: |
-          poetry run pytest --cov=pysentinel --cov-report=xml --cov-report=term-missing -q
+      # Same entry point as local development: format-check, lint, typecheck, tests
+      - name: Run checks
+        run: make check
 
       - name: Upload coverage to Codecov
-        if: ${{ secrets.CODECOV_TOKEN != '' }}
+        if: env.CODECOV_TOKEN != '' && matrix.python-version == '3.11'
         uses: codecov/codecov-action@v5
         with:
-          token: ${{ secrets.CODECOV_TOKEN }}
+          token: ${{ env.CODECOV_TOKEN }}
           files: coverage.xml
           flags: unittests
           name: codecov-coverage

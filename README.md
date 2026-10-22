@@ -403,7 +403,7 @@ alert_groups:
 This YAML config can be loaded using `load_config("config.yml")` and passed to the `Scanner`.
 ## Requirements
 
-- Python >= 3.9, < 4.0
+- Python >= 3.10, < 4.0
 
 ## Development
 

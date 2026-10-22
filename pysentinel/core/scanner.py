@@ -18,7 +18,7 @@ from pysentinel.channels import Email, Slack, Webhook, Telegram
 from pysentinel.channels.base import AlertChannel
 from pysentinel.utils.constants import Severity, ScannerStatus
 from pysentinel.utils.exception import DataSourceException, ThresholdException
-from pysentinel.utils.alert_db import AlertDB
+from pysentinel.utils.alert_db import AlertDB, DEFAULT_DB_PATH
 
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
@@ -43,7 +43,6 @@ class Scanner:
         self.start_time = None
         self.last_scan_time = None
         self.thresholds: List[Threshold] = []
-        self._alert_db = AlertDB()
 
         # Metrics and violations storage
         self._latest_metrics: Dict[str, MetricData] = {}
@@ -64,6 +63,13 @@ class Scanner:
 
         if config:
             self._config = load_config(config)
+
+        # Persists each alert's last run time so intervals survive restarts
+        self._alert_db = AlertDB(
+            self._config.get("global", {}).get("alert_db_path", DEFAULT_DB_PATH)
+        )
+
+        if config:
             self._setup_from_config()
 
     def _setup_from_config(self):
@@ -239,6 +245,7 @@ class Scanner:
                 logger.error(f"Error closing data source {datasource.name}: {e}")
 
         self._executor.shutdown(wait=True)
+        self._alert_db.close()
         logger.info("Scanner stopped")
 
     async def _scan_loop(self):
@@ -370,6 +377,10 @@ class Scanner:
                         f"Disabling datasource {datasource_name} due to too many errors"
                     )
                     datasource.enabled = False
+            finally:
+                # Record the run even on failure so a broken query waits for its
+                # interval instead of being retried on every scan tick
+                self._alert_db.update_last_run(alert_def.name, datetime.now())
 
     async def _handle_violation(self, violation: Violation):
         """Handle a threshold violation"""

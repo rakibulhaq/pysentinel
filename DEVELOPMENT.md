@@ -16,8 +16,17 @@ Common targets
 - make typecheck
   - Runs `mypy` against the `pysentinel` package (if `mypy` is installed).
 
-- make quality
-  - Runs `make lint`, `make typecheck`, and `make test` in sequence. The command stops on the first failing step (so you can fix the earliest failure before continuing).
+- make check (aliases: make ci, make quality)
+  - Runs exactly what CI runs: `black --check`, lint, typecheck, and tests with coverage. Stops on the first failure.
+
+- make format-check / make lint-fix
+  - Check formatting without changing files / apply ruff's safe autofixes.
+
+- make doctor
+  - Checks that Poetry, the virtualenv and the dev tools are usable, and prints the fix if not (for example after a Homebrew Python upgrade leaves the virtualenv pointing at a missing interpreter).
+
+- make hooks
+  - Installs the pre-commit git hooks.
 
 - make test
   - Runs the test suite with pytest. You can pass additional pytest args with the `PYTEST_EXTRA_ARGS` environment variable; for example:
@@ -27,17 +36,33 @@ Common targets
 - make coverage
   - Runs tests with coverage enabled and writes an HTML report to `htmlcov/index.html`.
 
+- make test-file TEST=tests/pysentinel/core / make test-k K=interval
+  - Run a single test file or directory, or tests matching a keyword.
+
+- make test-flaky RUNS=50
+  - Runs the suite repeatedly and stops at the first failure. Leaked, never-awaited coroutines are treated as errors so they can't hide behind a random test.
+
+- make run CONFIG=path/to/config.yml
+  - Runs the scanner with the given config file.
+
 - make build
   - Builds source and wheel distributions (uses `poetry build`). Artifacts are placed in `dist/`.
 
 - make publish
-  - Publishes the built package to PyPI using `poetry publish --build`.
-  - To publish to TestPyPI or another configured repository, set `POETRY_REPOSITORY` before running, for example:
+  - Builds and publishes to PyPI. Refuses to run unless the working tree is clean and HEAD is tagged `v<version>` (as created by `make release`). Set `SKIP_RELEASE_CHECK=1` to bypass.
 
-    POETRY_REPOSITORY=testpypi make publish
+- make publish-test
+  - Builds and publishes to TestPyPI (no tag check). Requires a TestPyPI token: `poetry config pypi-token.testpypi <token>`.
 
 - make clean
-  - Removes common build artifacts (dist, build, egg-info, htmlcov, .pytest_cache).
+  - Removes build artifacts and caches (dist, build, egg-info, htmlcov, coverage files, tool caches, `__pycache__`, and the local `alerts.db`).
+
+Releasing
+
+1. `make version` shows the current version.
+2. `make bump PART=patch|minor|major|<x.y.z>` only changes the version in `pyproject.toml`.
+3. `make release PART=minor` requires a clean working tree, runs `make check`, bumps the version, commits it as `Release: <version>` and creates the annotated tag `v<version>`. Add `PUSH=1` to push the branch and tag; otherwise it prints the push command.
+4. `make publish` uploads the tagged release to PyPI.
 
 Notes
 
@@ -52,4 +77,5 @@ Recommended workflow
 3. Lint: `make lint` (or run `make quality` to do lint, typecheck and tests together)
 4. Typecheck: `make typecheck`
 5. Run tests: `make test` and `make coverage` for coverage
-6. Build and publish: `make build` then `make publish` (or `make publish` which builds + publishes)
+6. Before pushing: `make check`
+7. Release: `make release PART=patch` then `make publish`

@@ -5,10 +5,19 @@ PySentinel CLI - Command line interface for running the scanner
 import argparse
 import asyncio
 import sys
+from importlib.metadata import PackageNotFoundError, version
 from pathlib import Path
 
 from pysentinel.core.scanner import Scanner
 from pysentinel.config.loader import load_config
+
+
+def get_version() -> str:
+    """Return the installed package version"""
+    try:
+        return version("pysentinel")
+    except PackageNotFoundError:
+        return "unknown"
 
 
 def start_scanner_sync(config_path: str) -> None:
@@ -77,7 +86,9 @@ Examples:
         help="Run scanner asynchronously (non-blocking)",
     )
 
-    parser.add_argument("--version", action="version", version="PySentinel CLI 0.1.0")
+    parser.add_argument(
+        "--version", action="version", version=f"PySentinel CLI {get_version()}"
+    )
 
     # Additional validation for async mode
     if len(sys.argv) > 1 and "--async" in sys.argv and sys.version_info < (3, 7):
