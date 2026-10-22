@@ -15,7 +15,13 @@ def load_config(config: Union[str, Dict]) -> Dict[str, Any]:
         if isinstance(config, str):
             with open(config, "r") as f:
                 if config.endswith(".yaml") or config.endswith(".yml"):
-                    _config = yaml.safe_load(f)  # type: ignore[assignment]
+                    loaded = yaml.safe_load(f)
+                    if not isinstance(loaded, dict):
+                        raise ScannerException(
+                            "Invalid configuration: YAML file must contain a mapping, got "
+                            f"{type(loaded).__name__}"
+                        )
+                    _config = loaded
                 else:
                     _config = json.load(f)
         else:
@@ -24,5 +30,7 @@ def load_config(config: Union[str, Dict]) -> Dict[str, Any]:
         logger.info("Configuration loaded successfully")
         return _config
 
+    except ScannerException:
+        raise
     except Exception as e:
         raise ScannerException(f"Failed to load configuration: {e}")

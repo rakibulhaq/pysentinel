@@ -470,10 +470,13 @@ class Scanner:
                 return True
         return False
 
-    def get_datasources(self) -> List[DataSource]:
+    def get_datasource_objects(self) -> List[DataSource]:
         """Get list of data source objects"""
-        # self.datasources is a mapping name -> DataSource, return the values
         return list(self.datasources.values())
+
+    def get_datasources(self) -> List[str]:
+        """Get list of data source names"""
+        return list(self.datasources.keys())
 
     def get_metric_count_async(self) -> int:
         """Get total number of metrics being collected"""
@@ -492,7 +495,7 @@ class Scanner:
                     operator=config["operator"],
                     value=config["value"],
                     severity=Severity(config.get("severity", Severity.WARNING)),
-                    message=str(config.get("message")),  # Coerce to str
+                    message=config.get("message"),
                     datasource_filter=config.get("datasource_filter"),
                 )
                 new_thresholds.append(threshold)
